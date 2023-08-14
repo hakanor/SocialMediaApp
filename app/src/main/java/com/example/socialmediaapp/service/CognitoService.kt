@@ -110,6 +110,9 @@ class CognitoService(private val appContext: Context, private val serviceCallbac
         sp.userSignOut()
         serviceCallback.onSignOut()
     }
+    fun getCurrentUserId (): String {
+        return this.userPool.currentUser.userId
+    }
 
     fun registerUserToDatabase () {
         val apiService = ApiService()
