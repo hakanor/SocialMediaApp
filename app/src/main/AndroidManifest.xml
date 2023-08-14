@@ -16,6 +16,9 @@
         android:theme="@style/Theme.SocialMediaApp"
         tools:targetApi="31">
         <activity
+            android:name=".screens.CreatePostActivity"
+            android:exported="false" />
+        <activity
             android:name=".screens.EditPostActivity"
             android:exported="false" />
         <activity

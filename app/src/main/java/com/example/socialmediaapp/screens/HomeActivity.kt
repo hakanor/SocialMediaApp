@@ -60,11 +60,8 @@ class HomeActivity : AppCompatActivity(), CognitoServiceCallback, NavigationView
         Log.d("HomeActivity","CurrentUser = $user")
 
         createPostButton.setOnClickListener {
-            /*
-            val intent = Intent(this, CreateOrderActivity::class.java)
+            val intent = Intent(this, CreatePostActivity::class.java)
             startActivity(intent)
-            TODO:
-             */
         }
 
         val itemTouchHelperCallback = object : ItemTouchHelper.SimpleCallback(0,
