@@ -2,4 +2,12 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="lightGrey">#9F9F9F</color>
+    <color name="darkGrey">#313131</color>
+    <color name="orange">#E89B39</color>
+    <color name="lightBlue">#4280EF</color>
+    <color name="lightBlueClicked">#144294</color>
+    <color name="fillWhite">#F5F5F5</color>
+    <color name="strokeWhite">#E1E1E1</color>
+    <color name="errorRed">#FF2525</color>
 </resources>
