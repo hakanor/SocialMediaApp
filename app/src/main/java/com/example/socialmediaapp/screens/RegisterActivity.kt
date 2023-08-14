@@ -16,8 +16,9 @@ class RegisterActivity : AppCompatActivity(), CognitoServiceCallback {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
         var emailEditText = findViewById<TextInputEditText>(R.id.emailEditText)
+        var nameEditText = findViewById<TextInputEditText>(R.id.nameEditText)
+        var surnameEditText = findViewById<TextInputEditText>(R.id.surnameEditText)
         var passwordEditText = findViewById<TextInputEditText>(R.id.passwordEditText)
-        var passwordEditText2 = findViewById<TextInputEditText>(R.id.passwordEditText2)
         var signUpButton = findViewById<Button>(R.id.signUpButton)
 
         signUpButton.setOnClickListener {
@@ -25,13 +26,16 @@ class RegisterActivity : AppCompatActivity(), CognitoServiceCallback {
 
             val username = emailEditText.text.toString()
             val password = passwordEditText.text.toString()
+            val name = nameEditText.text.toString()
+            val surname = surnameEditText.text.toString()
 
-            if(TextUtils.isEmpty(emailEditText.text) || TextUtils.isEmpty(passwordEditText.text)){
+            if(TextUtils.isEmpty(emailEditText.text)
+                || TextUtils.isEmpty(passwordEditText.text)
+                || TextUtils.isEmpty(nameEditText.text)
+                || TextUtils.isEmpty(surnameEditText.text)){
                 Toast.makeText(this@RegisterActivity,"Please fill out all fields.", Toast.LENGTH_SHORT).show()
-            } else if (passwordEditText.text.toString() != passwordEditText2.text.toString()) {
-                Toast.makeText(this@RegisterActivity,"Passwords doesn't match.", Toast.LENGTH_SHORT).show()
-            } else {
-                cognitoService.signUpInBackground(username, password)
+            }  else {
+                cognitoService.signUpInBackground(username, password, name, surname)
             }
         }
     }

@@ -19,7 +19,7 @@
             android:name=".screens.RegisterActivity"
             android:exported="false" />
         <activity
-            android:name=".screens.LoginActivity"
+            android:name=".screens.HomeActivity"
             android:exported="false" />
         <activity
             android:name=".screens.CreatePostActivity"
@@ -31,7 +31,7 @@
             android:name=".screens.ProfileActivity"
             android:exported="false" />
         <activity
-            android:name=".screens.HomeActivity"
+            android:name=".screens.LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

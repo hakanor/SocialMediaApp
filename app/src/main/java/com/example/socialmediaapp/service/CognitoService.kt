@@ -1,6 +1,8 @@
 package com.example.socialmediaapp.service
 
 import android.content.Context
+import android.util.Log
+import android.view.View
 import android.widget.Toast
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoDevice
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUser
@@ -16,6 +18,8 @@ import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.GenericHa
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.SignUpHandler
 import com.amazonaws.regions.Regions
 import com.amazonaws.services.cognitoidentityprovider.model.SignUpResult
+import com.example.myapplication.service.ApiService
+import com.example.socialmediaapp.Constants
 
 interface CognitoServiceCallback {
     fun onLoginSuccess()
@@ -34,11 +38,18 @@ class CognitoService(private val appContext: Context, private val serviceCallbac
     val userPool: CognitoUserPool
     private val userAttributes : CognitoUserAttributes
     private var userPassword: String? = null // Used for Login
+
+    private var name: String? = null
+    private var surname: String? = null
+    private var userId: String? = null
     init {
         userPool = CognitoUserPool(appContext, poolID, clientID, clientSecret, awsRegion)
         userAttributes = CognitoUserAttributes()
     }
-    fun signUpInBackground(userId: String?, password: String?) {
+    fun signUpInBackground(userId: String?, password: String?, name:String?, surname:String?) {
+        this.userId = userId
+        this.name = name
+        this.surname = surname
         userPool.signUpInBackground(userId, password, userAttributes, null, signUpCallback)
         //userPool.signUp(userId, password, this.userAttributes, null, signUpCallback);
     }
@@ -46,6 +57,7 @@ class CognitoService(private val appContext: Context, private val serviceCallbac
     var signUpCallback: SignUpHandler = object : SignUpHandler {
         override fun onSuccess(user: CognitoUser?, signUpResult: SignUpResult?) {
             // Sign-up was successful
+            registerUserToDatabase()
             Toast.makeText(appContext, "Sign-up success", Toast.LENGTH_LONG).show()
             serviceCallback.onRegisterSuccess()
             // Check if this user (cognitoUser) needs to be confirmed
@@ -97,6 +109,22 @@ class CognitoService(private val appContext: Context, private val serviceCallbac
         var sp = SharedPreferencesService(appContext)
         sp.userSignOut()
         serviceCallback.onSignOut()
+    }
+
+    fun registerUserToDatabase () {
+        val apiService = ApiService()
+        val url = Constants.URL_USERS
+        val method = "POST"
+        val requestBody = "{\"userId\":\"$userId\",\"name\":\"$name\", \"surname\": \"$surname\"}"
+        apiService.sendHttpRequestWithApiKey(url, method, requestBody) { responseBody, error ->
+            if (error != null) {
+                error.printStackTrace()
+            } else {
+                responseBody?.let {
+                    Log.d("Register", "Register successful.")
+                }
+            }
+        }
     }
 
     // Callback handler for the sign-in process
