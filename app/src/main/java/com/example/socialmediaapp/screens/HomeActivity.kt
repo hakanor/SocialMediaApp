@@ -228,13 +228,9 @@ class HomeActivity : AppCompatActivity(), CognitoServiceCallback, NavigationView
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.nav_account -> {
-                // TODO: Profile Activity
-                /*
                 val intent = Intent(this, ProfileActivity::class.java)
                 startActivity(intent)
                 return true
-
-                 */
             }
             R.id.nav_settings -> {
                 return true
