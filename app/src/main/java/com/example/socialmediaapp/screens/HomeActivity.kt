@@ -116,14 +116,11 @@ class HomeActivity : AppCompatActivity(), CognitoServiceCallback, NavigationView
                         builder.show()
                     }
                     ItemTouchHelper.RIGHT -> {
-                        /*
-                        val intent = Intent(this@HomeActivity, HomeActivity::class.java)
-                        var order = postList[viewHolder.adapterPosition]
-                        intent.putExtra("EXTRA_ORDER", order)
+                        val intent = Intent(this@HomeActivity, EditPostActivity::class.java)
+                        var post = postList[viewHolder.adapterPosition]
+                        intent.putExtra("EXTRA_POST", post)
                         adapter.notifyItemChanged(viewHolder.adapterPosition)
                         startActivity(intent)
-                        TODO: EditPostActivity
-                         */
                     }
                 }
             }
