@@ -16,6 +16,12 @@
         android:theme="@style/Theme.SocialMediaApp"
         tools:targetApi="31">
         <activity
+            android:name=".screens.RegisterActivity"
+            android:exported="false" />
+        <activity
+            android:name=".screens.LoginActivity"
+            android:exported="false" />
+        <activity
             android:name=".screens.CreatePostActivity"
             android:exported="false" />
         <activity

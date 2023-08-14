@@ -174,12 +174,9 @@ class HomeActivity : AppCompatActivity(), CognitoServiceCallback, NavigationView
         })
     }
     private fun navigateToLoginActivity () {
-        /* TODO : NavigateNoLoginActivity
-        //val intent = Intent(this, LoginActivity::class.java)
-        //intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        val intent = Intent(this, LoginActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
-        */
-
     }
     private fun fetchPosts () {
         val apiService = ApiService()
