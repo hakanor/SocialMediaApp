@@ -9,18 +9,17 @@ import android.widget.Toast
 import com.example.socialmediaapp.R
 import com.example.socialmediaapp.service.AuthService
 import com.example.socialmediaapp.service.AuthServiceCallback
-import com.example.socialmediaapp.service.UserDBService
 import com.google.android.material.textfield.TextInputEditText
 
 class RegisterActivity : AppCompatActivity(), AuthServiceCallback {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
-        var emailEditText = findViewById<TextInputEditText>(R.id.emailEditText)
-        var nameEditText = findViewById<TextInputEditText>(R.id.nameEditText)
-        var surnameEditText = findViewById<TextInputEditText>(R.id.surnameEditText)
-        var passwordEditText = findViewById<TextInputEditText>(R.id.passwordEditText)
-        var signUpButton = findViewById<Button>(R.id.signUpButton)
+        val emailEditText = findViewById<TextInputEditText>(R.id.emailEditText)
+        val nameEditText = findViewById<TextInputEditText>(R.id.nameEditText)
+        val surnameEditText = findViewById<TextInputEditText>(R.id.surnameEditText)
+        val passwordEditText = findViewById<TextInputEditText>(R.id.passwordEditText)
+        val signUpButton = findViewById<Button>(R.id.signUpButton)
 
         signUpButton.setOnClickListener {
             val authService = AuthService(this,this)

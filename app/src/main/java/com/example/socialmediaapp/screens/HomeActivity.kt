@@ -23,12 +23,12 @@ import com.example.socialmediaapp.Constants
 import com.example.socialmediaapp.R
 import com.example.socialmediaapp.RecyclerViewAdapter
 import com.example.socialmediaapp.model.Post
-import com.example.socialmediaapp.service.CognitoService
-import com.example.socialmediaapp.service.CognitoServiceCallback
+import com.example.socialmediaapp.service.AuthService
+import com.example.socialmediaapp.service.AuthServiceCallback
 import com.google.android.material.navigation.NavigationView
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 
-class HomeActivity : AppCompatActivity(), CognitoServiceCallback, NavigationView.OnNavigationItemSelectedListener{
+class HomeActivity : AppCompatActivity(), AuthServiceCallback, NavigationView.OnNavigationItemSelectedListener{
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: RecyclerViewAdapter
@@ -54,10 +54,6 @@ class HomeActivity : AppCompatActivity(), CognitoServiceCallback, NavigationView
 
         recyclerView.adapter = adapter
         fetchPosts()
-
-        var cognitoService = CognitoService(this,this)
-        var user = cognitoService.userPool.currentUser.userId
-        Log.d("HomeActivity","CurrentUser = $user")
 
         createPostButton.setOnClickListener {
             val intent = Intent(this, CreatePostActivity::class.java)
@@ -206,15 +202,6 @@ class HomeActivity : AppCompatActivity(), CognitoServiceCallback, NavigationView
         adapter.setData(data)
         adapter.notifyDataSetChanged()
     }
-    override fun onLoginSuccess() {
-    }
-
-    override fun onSignOut() {
-        navigateToLoginActivity()
-    }
-
-    override fun onRegisterSuccess() {
-    }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
@@ -228,13 +215,33 @@ class HomeActivity : AppCompatActivity(), CognitoServiceCallback, NavigationView
             }
 
             R.id.nav_logout -> {
-                var cognitoService = CognitoService(this,this)
-                cognitoService.userSignOut()
-                navigateToLoginActivity()
+                val authService = AuthService(this,this)
+                authService.logOut()
                 return true
             }
             // Handle other items as needed
         }
         return false
+    }
+
+    override fun onLogin(message: String) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onLogOut(message: String) {
+        runOnUiThread {
+            Toast.makeText(this,message,Toast.LENGTH_SHORT).show()
+        }
+        navigateToLoginActivity()
+    }
+
+    override fun onRegister(message: String) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onError(error: String) {
+        runOnUiThread {
+            Toast.makeText(this,error,Toast.LENGTH_SHORT).show()
+        }
     }
 }

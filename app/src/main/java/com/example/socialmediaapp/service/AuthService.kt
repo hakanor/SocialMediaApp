@@ -1,19 +1,21 @@
 package com.example.socialmediaapp.service
 
 import android.content.Context
+import android.util.Log
 import com.example.myapplication.service.ApiService
 import com.example.socialmediaapp.Constants
 import org.json.JSONObject
 
 enum class AuthServiceActions(val value:String) {
-    login("login"),
-    register("register"),
-    changePassword("changePassword"),
-    resetPassword("resetPassword"),
-    confirmForgotPassword("confirmForgotPassword"),
-    mfa("mfa"),
-    getUser("getUser"),
-    validateAccessToken("validateAccessToken")
+    Login("login"),
+    Register("register"),
+    ChangePassword("changePassword"),
+    ResetPassword("resetPassword"),
+    ConfirmForgotPassword("confirmForgotPassword"),
+    MFA("mfa"),
+    GetUser("getUser"),
+    Logout("logout"),
+    ValidateAccessToken("validateAccessToken")
 }
 
 interface AuthServiceCallback {
@@ -29,7 +31,7 @@ class AuthService (private val appContext: Context, private var callback: AuthSe
         val url = Constants.BASE_URL + "/auth"
         val method = "POST"
         val jsonBody = mapOf(
-            "action" to AuthServiceActions.login.value, // Use enum value here
+            "action" to AuthServiceActions.Login.value, // Use enum value here
             "username" to username,
             "password" to password
         )
@@ -55,12 +57,40 @@ class AuthService (private val appContext: Context, private var callback: AuthSe
             }
         }
     }
+    fun logOut() {
+        val apiService = ApiService()
+        val spService = SharedPreferencesService(appContext)
+        val token = spService.getCurrentToken()
+        val username = spService.getCurrentUser()
+        val url = Constants.BASE_URL + "/auth"
+        val method = "POST"
+        val jsonBody = mapOf(
+            "action" to AuthServiceActions.Logout.value, // Use enum value here
+            "token" to token,
+            "username" to username,
+        )
+        val requestBody = apiService.createJsonStringFromMap(jsonBody)
+
+        apiService.sendHttpRequestWithApiKey(url, method, requestBody) { responseBody, responseCode, error ->
+            if (error != null) {
+                callback.onError(error.message.toString())
+            } else {
+                if (responseCode == 200) {
+                    val jsonResponse = JSONObject(responseBody ?: "")
+                    spService.userSignOut()
+                    callback.onLogOut(jsonResponse.toString())
+                } else {
+                    callback.onError(responseBody.toString())
+                }
+            }
+        }
+    }
     fun registerUser(username: String, password: String,name: String, surname: String) {
         val apiService = ApiService()
         val url = Constants.BASE_URL + "/auth"
         val method = "POST"
         val jsonBody = mapOf(
-            "action" to AuthServiceActions.register.value, // Use enum value here
+            "action" to AuthServiceActions.Register.value, // Use enum value here
             "username" to username,
             "password" to password
         )

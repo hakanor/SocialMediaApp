@@ -44,7 +44,7 @@ class ApiService {
         val listType = object : TypeToken<List<Post>>() {}.type
         return gson.fromJson(json, listType)
     }
-    fun createJsonStringFromMap(jsonBody: Map<String, Any>?): String? {
+    fun createJsonStringFromMap(jsonBody: Map<String, String?>): String? {
         return jsonBody?.let { JSONObject(it).toString() }
     }
 }
