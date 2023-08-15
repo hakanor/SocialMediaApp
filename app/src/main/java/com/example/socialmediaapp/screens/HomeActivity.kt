@@ -3,7 +3,6 @@ package com.example.socialmediaapp.screens
 import android.content.Intent
 import android.graphics.Canvas
 import android.os.Bundle
-import android.util.Log
 import android.view.KeyEvent
 import android.view.MenuItem
 import android.view.View
@@ -14,7 +13,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -38,11 +36,10 @@ class HomeActivity : AppCompatActivity(), AuthServiceCallback, NavigationView.On
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
-        val drawerLayout = findViewById<DrawerLayout>(R.id.drawer_layout)
         val navView = findViewById<NavigationView>(R.id.nav_view)
         navView.setNavigationItemSelectedListener(this)
 
-        var createPostButton = findViewById<Button>(R.id.newPostButton)
+        val createPostButton = findViewById<Button>(R.id.newPostButton)
 
         loadingProgressBar = findViewById(R.id.loadingProgressBar)
         loadingProgressBar.visibility = View.VISIBLE
@@ -79,16 +76,16 @@ class HomeActivity : AppCompatActivity(), AuthServiceCallback, NavigationView.On
                         builder.setTitle("Confirm Deletion")
                         builder.setMessage("Are you sure you want to delete this item? This action cannot be undone.")
 
-                        builder.setPositiveButton(android.R.string.yes) { dialog, which ->
-                            var apiService = ApiService()
-                            var deleteUrl = Constants.URL_POSTS +"/"+ postList[viewHolder.adapterPosition].id
+                        builder.setPositiveButton(android.R.string.yes) { _, _ ->
+                            val apiService = ApiService()
+                            val deleteUrl = Constants.URL_POSTS +"/"+ postList[viewHolder.adapterPosition].id
                             apiService.sendHttpRequestWithApiKey(deleteUrl, "DELETE", null) { responseBody, responseCode,error ->
                                 if (error != null) {
                                     error.printStackTrace()
                                     Toast.makeText(this@HomeActivity, error.toString(), Toast.LENGTH_SHORT).show()
                                 } else {
                                     responseBody?.let {
-                                        var deleteId = postList[viewHolder.adapterPosition].id
+                                        val deleteId = postList[viewHolder.adapterPosition].id
                                         val updatedList = postList.filterNot { it.id == deleteId }
                                         postList = updatedList
                                         runOnUiThread{
@@ -102,7 +99,7 @@ class HomeActivity : AppCompatActivity(), AuthServiceCallback, NavigationView.On
                             }
                         }
 
-                        builder.setNegativeButton(android.R.string.no) { dialog, which ->
+                        builder.setNegativeButton(android.R.string.no) { dialog, _ ->
                             adapter.notifyItemChanged(viewHolder.adapterPosition)
                             dialog.dismiss()
                         }
@@ -110,7 +107,7 @@ class HomeActivity : AppCompatActivity(), AuthServiceCallback, NavigationView.On
                     }
                     ItemTouchHelper.RIGHT -> {
                         val intent = Intent(this@HomeActivity, EditPostActivity::class.java)
-                        var post = postList[viewHolder.adapterPosition]
+                        val post = postList[viewHolder.adapterPosition]
                         intent.putExtra("EXTRA_POST", post)
                         adapter.notifyItemChanged(viewHolder.adapterPosition)
                         startActivity(intent)
@@ -214,6 +211,12 @@ class HomeActivity : AppCompatActivity(), AuthServiceCallback, NavigationView.On
                 return true
             }
 
+            R.id.nav_changePassword -> {
+                val intent = Intent(this, ChangePasswordActivity::class.java)
+                startActivity(intent)
+                return true
+            }
+
             R.id.nav_logout -> {
                 val authService = AuthService(this,this)
                 authService.logOut()
@@ -243,5 +246,9 @@ class HomeActivity : AppCompatActivity(), AuthServiceCallback, NavigationView.On
         runOnUiThread {
             Toast.makeText(this,error,Toast.LENGTH_SHORT).show()
         }
+    }
+
+    override fun onSuccess(message: String) {
+        TODO("Not yet implemented")
     }
 }

@@ -59,4 +59,8 @@ class RegisterActivity : AppCompatActivity(), AuthServiceCallback {
     override fun onError(error: String) {
         TODO("Not yet implemented")
     }
+
+    override fun onSuccess(message: String) {
+        TODO("Not yet implemented")
+    }
 }

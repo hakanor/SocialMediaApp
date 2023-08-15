@@ -23,6 +23,7 @@ interface AuthServiceCallback {
     fun onLogOut(message: String)
     fun onRegister(message: String)
     fun onError(error: String)
+    fun onSuccess(message:String)
 }
 
 class AuthService (private val appContext: Context, private var callback: AuthServiceCallback){
@@ -105,6 +106,34 @@ class AuthService (private val appContext: Context, private var callback: AuthSe
                     val dbService = UserDBService()
                     dbService.createNewUser(name,surname)
                     callback.onRegister(jsonResponse.toString())
+                } else {
+                    callback.onError(responseBody.toString())
+                }
+            }
+        }
+    }
+    fun changePassword(password: String, newPassword: String) {
+        val apiService = ApiService()
+        val spService = SharedPreferencesService(appContext)
+        val token = spService.getCurrentToken()
+        val url = Constants.BASE_URL + "/auth"
+        val method = "POST"
+        val jsonBody = mapOf(
+            "action" to AuthServiceActions.ChangePassword.value,
+            "token" to token,
+            "password" to password,
+            "newPassword" to newPassword
+        )
+        val requestBody = apiService.createJsonStringFromMap(jsonBody)
+
+        apiService.sendHttpRequestWithApiKey(url, method, requestBody) { responseBody, responseCode, error ->
+            if (error != null) {
+                callback.onError(error.message.toString())
+            } else {
+                Log.d("auth",responseBody.toString())
+                if (responseCode == 200) {
+                    val jsonResponse = JSONObject(responseBody ?: "")
+                    callback.onSuccess(jsonResponse.toString())
                 } else {
                     callback.onError(responseBody.toString())
                 }

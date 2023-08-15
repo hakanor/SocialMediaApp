@@ -19,10 +19,11 @@ class LoginActivity : AppCompatActivity(), AuthServiceCallback {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-        var userNameTextEdit = findViewById<TextInputEditText>(R.id.userNameEditText)
-        var passwordTextEdit = findViewById<TextInputEditText>(R.id.passwordEditText)
-        var loginButton = findViewById<Button>(R.id.loginButton)
-        var signUpText = findViewById<TextView>(R.id.signUpText)
+        val userNameTextEdit = findViewById<TextInputEditText>(R.id.userNameEditText)
+        val passwordTextEdit = findViewById<TextInputEditText>(R.id.passwordEditText)
+        val loginButton = findViewById<Button>(R.id.loginButton)
+        val signUpText = findViewById<TextView>(R.id.signUpText)
+        val forgotPasswordText = findViewById<TextView>(R.id.forgotPasswordText)
 
         checkUserLoggedIn()
 
@@ -33,7 +34,7 @@ class LoginActivity : AppCompatActivity(), AuthServiceCallback {
             if(TextUtils.isEmpty(userNameTextEdit.text) || TextUtils.isEmpty(passwordTextEdit.text)){
                 Toast.makeText(this@LoginActivity,"Please fill out all fields.",Toast.LENGTH_SHORT).show()
             } else {
-                var authService = AuthService(this,this)
+                val authService = AuthService(this,this)
                 authService.login(username,password)
             }
         }
@@ -79,5 +80,8 @@ class LoginActivity : AppCompatActivity(), AuthServiceCallback {
         runOnUiThread{
             Toast.makeText(this,error,Toast.LENGTH_LONG).show()
         }
+    }
+    override fun onSuccess(message: String) {
+        TODO("Not yet implemented")
     }
 }

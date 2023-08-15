@@ -16,6 +16,9 @@
         android:theme="@style/Theme.SocialMediaApp"
         tools:targetApi="31">
         <activity
+            android:name=".screens.ChangePasswordActivity"
+            android:exported="false" />
+        <activity
             android:name=".screens.RegisterActivity"
             android:exported="false" />
         <activity
