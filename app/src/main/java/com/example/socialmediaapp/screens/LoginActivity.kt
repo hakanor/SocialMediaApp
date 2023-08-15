@@ -1,6 +1,5 @@
 package com.example.socialmediaapp.screens
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
@@ -12,7 +11,6 @@ import com.example.socialmediaapp.R
 import com.example.socialmediaapp.service.AuthService
 import com.example.socialmediaapp.service.AuthServiceCallback
 
-import com.example.socialmediaapp.service.SharedPreferencesService
 import com.google.android.material.textfield.TextInputEditText
 
 class LoginActivity : AppCompatActivity(), AuthServiceCallback {
@@ -37,7 +35,7 @@ class LoginActivity : AppCompatActivity(), AuthServiceCallback {
             } else {
                 //cognitoService.userLogin(username, password)
                 var authService = AuthService(this,this)
-                authService.login(username,password)
+                authService.logUserIn(username,password)
             }
         }
 

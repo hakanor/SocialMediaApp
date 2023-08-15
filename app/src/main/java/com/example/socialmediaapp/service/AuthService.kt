@@ -1,8 +1,6 @@
 package com.example.socialmediaapp.service
 
 import android.content.Context
-import android.util.Log
-import android.widget.Toast
 import com.example.myapplication.service.ApiService
 import com.example.socialmediaapp.Constants
 import org.json.JSONObject
@@ -51,6 +49,32 @@ class AuthService (private val appContext: Context, private var callback: AuthSe
                     } else {
                         callback.onError(responseBody.toString())
                     }
+                } else {
+                    callback.onError(responseBody.toString())
+                }
+            }
+        }
+    }
+    fun registerUser(username: String, password: String,name: String, surname: String) {
+        val apiService = ApiService()
+        val url = Constants.BASE_URL + "/auth"
+        val method = "POST"
+        val jsonBody = mapOf(
+            "action" to AuthServiceActions.register.value, // Use enum value here
+            "username" to username,
+            "password" to password
+        )
+        val requestBody = apiService.createJsonStringFromMap(jsonBody)
+
+        apiService.sendHttpRequestWithApiKey(url, method, requestBody) { responseBody, responseCode, error ->
+            if (error != null) {
+                callback.onError(error.message.toString())
+            } else {
+                if (responseCode == 200) {
+                    val jsonResponse = JSONObject(responseBody ?: "")
+                    val dbService = UserDBService()
+                    dbService.createNewUser(name,surname)
+                    callback.onRegister(jsonResponse.toString())
                 } else {
                     callback.onError(responseBody.toString())
                 }
