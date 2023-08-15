@@ -16,7 +16,6 @@ import java.util.Date
 class CreatePostActivity : AppCompatActivity(), CognitoServiceCallback{
 
     private lateinit var dateTextEdit : TextInputEditText
-    private lateinit var userIdTextEdit : TextInputEditText
     private lateinit var contentTextEdit : TextInputEditText
     private lateinit var userId : String
     private lateinit var content : String
@@ -46,7 +45,7 @@ class CreatePostActivity : AppCompatActivity(), CognitoServiceCallback{
         val url = Constants.URL_POSTS
         val method = "POST"
 
-        apiService.sendHttpRequestWithApiKey(url, method, requestBody) { responseBody, error ->
+        apiService.sendHttpRequestWithApiKey(url, method, requestBody) { responseBody, responseCode,error ->
             if (error != null) {
                 runOnUiThread{
                     Toast.makeText(this@CreatePostActivity, error.toString(), Toast.LENGTH_SHORT).show()

@@ -50,7 +50,7 @@ class EditPostActivity : AppCompatActivity() {
             val apiService = ApiService()
             val url = Constants.URL_POSTS
             val method = "PUT"
-            apiService.sendHttpRequestWithApiKey(url, method, requestBody) { responseBody, error ->
+            apiService.sendHttpRequestWithApiKey(url, method, requestBody) { responseBody,responseCode, error ->
                 if (error != null) {
                     runOnUiThread{
                         Toast.makeText(this, error.toString(), Toast.LENGTH_SHORT).show()

@@ -6,13 +6,14 @@ import com.google.gson.reflect.TypeToken
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody.Companion.toRequestBody
+import org.json.JSONObject
 import java.io.IOException
 
 class ApiService {
     private val apiKey = "txSCMdHUWaajE22Z7uwFr4L5w15Hifyk8SOewyOR"
     private val client = OkHttpClient()
 
-    fun sendHttpRequestWithApiKey(url: String, method: String, requestBody: String?, callback: (String?, Exception?) -> Unit) {
+    fun sendHttpRequestWithApiKey(url: String, method: String, requestBody: String?, callback: (String?, Int?, Exception?) -> Unit) {
         val mediaType = "application/json; charset=utf-8".toMediaType()
         val body = requestBody?.toRequestBody(mediaType)
 
@@ -25,11 +26,12 @@ class ApiService {
         client.newCall(request).enqueue(object : Callback {
             override fun onResponse(call: Call, response: Response) {
                 val responseBody = response.body?.string()
-                callback(responseBody, null)
+                val responseCode = response.code
+                callback(responseBody, responseCode, null)
             }
 
             override fun onFailure(call: Call, e: IOException) {
-                callback(null, e)
+                callback(null, 0,e)
             }
         })
     }
@@ -41,6 +43,9 @@ class ApiService {
         val gson = Gson()
         val listType = object : TypeToken<List<Post>>() {}.type
         return gson.fromJson(json, listType)
+    }
+    fun createJsonStringFromMap(jsonBody: Map<String, Any>?): String? {
+        return jsonBody?.let { JSONObject(it).toString() }
     }
 }
 

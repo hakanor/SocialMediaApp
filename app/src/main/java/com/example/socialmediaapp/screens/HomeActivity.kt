@@ -86,7 +86,7 @@ class HomeActivity : AppCompatActivity(), CognitoServiceCallback, NavigationView
                         builder.setPositiveButton(android.R.string.yes) { dialog, which ->
                             var apiService = ApiService()
                             var deleteUrl = Constants.URL_POSTS +"/"+ postList[viewHolder.adapterPosition].id
-                            apiService.sendHttpRequestWithApiKey(deleteUrl, "DELETE", null) { responseBody, error ->
+                            apiService.sendHttpRequestWithApiKey(deleteUrl, "DELETE", null) { responseBody, responseCode,error ->
                                 if (error != null) {
                                     error.printStackTrace()
                                     Toast.makeText(this@HomeActivity, error.toString(), Toast.LENGTH_SHORT).show()
@@ -183,7 +183,7 @@ class HomeActivity : AppCompatActivity(), CognitoServiceCallback, NavigationView
         val url = Constants.URL_POSTS
         val method = "GET"
 
-        apiService.sendHttpRequestWithApiKey(url, method, null) { responseBody, error ->
+        apiService.sendHttpRequestWithApiKey(url, method, null) { responseBody, responseCode,error ->
             if (error != null) {
                 error.printStackTrace()
             } else {

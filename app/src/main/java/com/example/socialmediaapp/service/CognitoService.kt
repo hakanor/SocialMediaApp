@@ -119,7 +119,7 @@ class CognitoService(private val appContext: Context, private val serviceCallbac
         val url = Constants.URL_USERS
         val method = "POST"
         val requestBody = "{\"userId\":\"$userId\",\"name\":\"$name\", \"surname\": \"$surname\"}"
-        apiService.sendHttpRequestWithApiKey(url, method, requestBody) { responseBody, error ->
+        apiService.sendHttpRequestWithApiKey(url, method, requestBody) { responseBody, responseCode,error ->
             if (error != null) {
                 error.printStackTrace()
             } else {
@@ -134,9 +134,9 @@ class CognitoService(private val appContext: Context, private val serviceCallbac
     var authenticationHandler: AuthenticationHandler = object : AuthenticationHandler {
         override fun authenticationChallenge(continuation: ChallengeContinuation) {}
         override fun onSuccess(userSession: CognitoUserSession, newDevice: CognitoDevice?) {
-            Toast.makeText(appContext, "Sign in success", Toast.LENGTH_LONG).show()
-            var sp = SharedPreferencesService(appContext)
-            sp.userLoggedIn()
+            //Toast.makeText(appContext, "Sign in success", Toast.LENGTH_LONG).show()
+            //var sp = SharedPreferencesService(appContext)
+            //sp.userLoggedIn()
             serviceCallback.onLoginSuccess()
         }
 
