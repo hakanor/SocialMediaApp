@@ -166,4 +166,57 @@ class AuthService (private val appContext: Context, private var callback: AuthSe
             }
         }
     }
+    fun sendResetPasswordMail(email: String) {
+        val apiService = ApiService()
+        val spService = SharedPreferencesService(appContext)
+        val token = spService.getCurrentToken()
+        val url = Constants.BASE_URL + "/auth"
+        val method = "POST"
+        val jsonBody = mapOf(
+            "action" to AuthServiceActions.ResetPassword.value,
+            "username" to email
+        )
+        val requestBody = apiService.createJsonStringFromMap(jsonBody)
+
+        apiService.sendHttpRequestWithApiKey(url, method, requestBody) { responseBody, responseCode, error ->
+            if (error != null) {
+                callback.onError(error.message.toString())
+            } else {
+                Log.d("auth",responseBody.toString())
+                if (responseCode == 200) {
+                    val jsonResponse = JSONObject(responseBody ?: "")
+                    callback.onSuccess(jsonResponse.toString())
+                } else {
+                    callback.onError(responseBody.toString())
+                }
+            }
+        }
+    }
+
+    fun resetPassword(code: String, username:String, password: String) {
+        val apiService = ApiService()
+        val url = Constants.BASE_URL + "/auth"
+        val method = "POST"
+        val jsonBody = mapOf(
+            "action" to AuthServiceActions.ConfirmForgotPassword.value,
+            "code" to code,
+            "username" to username,
+            "newPassword" to password
+        )
+        val requestBody = apiService.createJsonStringFromMap(jsonBody)
+
+        apiService.sendHttpRequestWithApiKey(url, method, requestBody) { responseBody, responseCode, error ->
+            if (error != null) {
+                callback.onError(error.message.toString())
+            } else {
+                Log.d("auth",responseBody.toString())
+                if (responseCode == 200) {
+                    val jsonResponse = JSONObject(responseBody ?: "")
+                    callback.onSuccess(jsonResponse.toString())
+                } else {
+                    callback.onError(responseBody.toString())
+                }
+            }
+        }
+    }
 }

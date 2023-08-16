@@ -16,6 +16,15 @@
         android:theme="@style/Theme.SocialMediaApp"
         tools:targetApi="31">
         <activity
+            android:name=".screens.ResetPasswordActivity"
+            android:exported="false" />
+        <activity
+            android:name=".screens.ConfirmCodeActivity"
+            android:exported="false" />
+        <activity
+            android:name=".screens.ForgotPasswordActivity"
+            android:exported="false" />
+        <activity
             android:name=".screens.ChangePasswordActivity"
             android:exported="false" />
         <activity

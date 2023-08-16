@@ -46,6 +46,11 @@ class LoginActivity : AppCompatActivity(), AuthServiceCallback {
             val intent = Intent(this, RegisterActivity::class.java)
             startActivity(intent)
         }
+
+        forgotPasswordText.setOnClickListener {
+            val intent = Intent(this, ForgotPasswordActivity::class.java)
+            startActivity(intent)
+        }
     }
     private fun checkUserLoggedIn () {
         val sp = SharedPreferencesService(this)
