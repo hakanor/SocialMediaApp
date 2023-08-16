@@ -140,4 +140,30 @@ class AuthService (private val appContext: Context, private var callback: AuthSe
             }
         }
     }
+    fun validateAccessToken() {
+        val apiService = ApiService()
+        val spService = SharedPreferencesService(appContext)
+        val token = spService.getCurrentToken()
+        val url = Constants.BASE_URL + "/auth"
+        val method = "POST"
+        val jsonBody = mapOf(
+            "action" to AuthServiceActions.ValidateAccessToken.value,
+            "token" to token
+        )
+        val requestBody = apiService.createJsonStringFromMap(jsonBody)
+
+        apiService.sendHttpRequestWithApiKey(url, method, requestBody) { responseBody, responseCode, error ->
+            if (error != null) {
+                callback.onError(error.message.toString())
+            } else {
+                Log.d("auth",responseBody.toString())
+                if (responseCode == 200) {
+                    val jsonResponse = JSONObject(responseBody ?: "")
+                    callback.onSuccess(jsonResponse.toString())
+                } else {
+                    callback.onError(responseBody.toString())
+                }
+            }
+        }
+    }
 }
