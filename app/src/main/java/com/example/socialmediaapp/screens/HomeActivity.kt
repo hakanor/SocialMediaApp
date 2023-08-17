@@ -16,7 +16,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.myapplication.service.ApiService
+import com.example.socialmediaapp.service.ApiService
 import com.example.socialmediaapp.Constants
 import com.example.socialmediaapp.R
 import com.example.socialmediaapp.RecyclerViewAdapter

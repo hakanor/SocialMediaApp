@@ -2,7 +2,6 @@ package com.example.socialmediaapp.service
 
 import android.content.Context
 import android.util.Log
-import android.view.View
 import android.widget.Toast
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoDevice
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUser
@@ -18,7 +17,6 @@ import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.GenericHa
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.SignUpHandler
 import com.amazonaws.regions.Regions
 import com.amazonaws.services.cognitoidentityprovider.model.SignUpResult
-import com.example.myapplication.service.ApiService
 import com.example.socialmediaapp.Constants
 
 interface CognitoServiceCallback {

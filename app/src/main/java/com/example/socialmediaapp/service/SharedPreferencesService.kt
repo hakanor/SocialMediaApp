@@ -5,15 +5,16 @@ import android.content.SharedPreferences
 
 class SharedPreferencesService(context: Context) {
     private val sharedPrefs: SharedPreferences = context.getSharedPreferences("AWSLogin", Context.MODE_PRIVATE)
-    private val awsToken = "userLoggedIn"
 
-    fun userLoggedIn(token:String,username:String) {
-        sharedPrefs.edit().putString("token",token).apply()
+    fun userLoggedIn(accessToken:String, refreshToken:String, username:String) {
+        sharedPrefs.edit().putString("accessToken",accessToken).apply()
+        sharedPrefs.edit().putString("refreshToken",refreshToken).apply()
         sharedPrefs.edit().putString("username",username).apply()
     }
 
     fun userSignOut() {
-        sharedPrefs.edit().remove("token").apply()
+        sharedPrefs.edit().remove("accessToken").apply()
+        sharedPrefs.edit().remove("refreshToken").apply()
         sharedPrefs.edit().remove("username").apply()
     }
 
@@ -22,8 +23,16 @@ class SharedPreferencesService(context: Context) {
         return username
     }
 
-    fun getCurrentToken(): String? {
-        var token  = sharedPrefs.getString("token","")
+    fun getCurrentAccessToken(): String? {
+        var token  = sharedPrefs.getString("accessToken","")
         return token
+    }
+    fun getCurrentRefreshToken(): String? {
+        var token  = sharedPrefs.getString("refreshToken","")
+        return token
+    }
+
+    fun updateAccessToken(accessToken: String) {
+        sharedPrefs.edit().remove("accessToken").apply()
     }
 }

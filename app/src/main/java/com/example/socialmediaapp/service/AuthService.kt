@@ -2,7 +2,6 @@ package com.example.socialmediaapp.service
 
 import android.content.Context
 import android.util.Log
-import com.example.myapplication.service.ApiService
 import com.example.socialmediaapp.Constants
 import org.json.JSONObject
 
@@ -15,6 +14,7 @@ enum class AuthServiceActions(val value:String) {
     MFA("mfa"),
     GetUser("getUser"),
     Logout("logout"),
+    RefreshAccessToken("refreshAccessToken"),
     ValidateAccessToken("validateAccessToken")
 }
 
@@ -45,9 +45,10 @@ class AuthService (private val appContext: Context, private var callback: AuthSe
                 if (responseCode == 200) {
                     val jsonResponse = JSONObject(responseBody ?: "")
                     if (jsonResponse.has("accessToken")) {
-                        val token = jsonResponse.getString("accessToken")
+                        val accessToken = jsonResponse.getString("accessToken")
+                        val refreshToken = jsonResponse.getString("refreshToken")
                         val sharedPreferencesService = SharedPreferencesService(appContext)
-                        sharedPreferencesService.userLoggedIn(token,username)
+                        sharedPreferencesService.userLoggedIn(accessToken,refreshToken,username)
                         callback.onLogin("Login success")
                     } else {
                         callback.onError(responseBody.toString())
@@ -61,7 +62,7 @@ class AuthService (private val appContext: Context, private var callback: AuthSe
     fun logOut() {
         val apiService = ApiService()
         val spService = SharedPreferencesService(appContext)
-        val token = spService.getCurrentToken()
+        val token = spService.getCurrentAccessToken()
         val username = spService.getCurrentUser()
         val url = Constants.BASE_URL + "/auth"
         val method = "POST"
@@ -115,7 +116,7 @@ class AuthService (private val appContext: Context, private var callback: AuthSe
     fun changePassword(password: String, newPassword: String) {
         val apiService = ApiService()
         val spService = SharedPreferencesService(appContext)
-        val token = spService.getCurrentToken()
+        val token = spService.getCurrentAccessToken()
         val url = Constants.BASE_URL + "/auth"
         val method = "POST"
         val jsonBody = mapOf(
@@ -143,7 +144,7 @@ class AuthService (private val appContext: Context, private var callback: AuthSe
     fun validateAccessToken() {
         val apiService = ApiService()
         val spService = SharedPreferencesService(appContext)
-        val token = spService.getCurrentToken()
+        val token = spService.getCurrentAccessToken()
         val url = Constants.BASE_URL + "/auth"
         val method = "POST"
         val jsonBody = mapOf(
@@ -156,7 +157,6 @@ class AuthService (private val appContext: Context, private var callback: AuthSe
             if (error != null) {
                 callback.onError(error.message.toString())
             } else {
-                Log.d("auth",responseBody.toString())
                 if (responseCode == 200) {
                     val jsonResponse = JSONObject(responseBody ?: "")
                     callback.onSuccess(jsonResponse.toString())
@@ -169,7 +169,6 @@ class AuthService (private val appContext: Context, private var callback: AuthSe
     fun sendResetPasswordMail(email: String) {
         val apiService = ApiService()
         val spService = SharedPreferencesService(appContext)
-        val token = spService.getCurrentToken()
         val url = Constants.BASE_URL + "/auth"
         val method = "POST"
         val jsonBody = mapOf(

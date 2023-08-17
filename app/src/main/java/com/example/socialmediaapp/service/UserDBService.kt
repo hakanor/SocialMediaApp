@@ -1,7 +1,6 @@
 package com.example.socialmediaapp.service
 
 import android.util.Log
-import com.example.myapplication.service.ApiService
 import com.example.socialmediaapp.Constants
 
 class UserDBService {

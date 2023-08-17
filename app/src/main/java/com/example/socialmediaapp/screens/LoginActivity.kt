@@ -54,7 +54,8 @@ class LoginActivity : AppCompatActivity(), AuthServiceCallback {
     }
     private fun checkUserLoggedIn () {
         val sp = SharedPreferencesService(this)
-        if (sp.getCurrentUser() != "" && sp.getCurrentToken() != "") {
+        Log.d("auth",sp.getCurrentAccessToken()?:"")
+        if (sp.getCurrentUser() != "" && sp.getCurrentAccessToken() != "") {
             authService.validateAccessToken()
         } else {
             Log.d("LoginActivity", "User is not logged in.")

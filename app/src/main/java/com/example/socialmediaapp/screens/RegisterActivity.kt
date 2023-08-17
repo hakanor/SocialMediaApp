@@ -57,7 +57,9 @@ class RegisterActivity : AppCompatActivity(), AuthServiceCallback {
     }
 
     override fun onError(error: String) {
-        TODO("Not yet implemented")
+        runOnUiThread {
+            Toast.makeText(this,error,Toast.LENGTH_SHORT).show()
+        }
     }
 
     override fun onSuccess(message: String) {

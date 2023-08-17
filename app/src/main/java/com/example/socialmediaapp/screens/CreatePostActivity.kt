@@ -4,7 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.Toast
-import com.example.myapplication.service.ApiService
+import com.example.socialmediaapp.service.ApiService
 import com.example.socialmediaapp.Constants
 import com.example.socialmediaapp.R
 import com.example.socialmediaapp.service.CognitoService

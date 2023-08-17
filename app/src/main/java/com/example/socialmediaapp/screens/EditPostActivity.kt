@@ -9,7 +9,7 @@ import android.app.TimePickerDialog
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
-import com.example.myapplication.service.ApiService
+import com.example.socialmediaapp.service.ApiService
 import com.example.socialmediaapp.Constants
 import com.example.socialmediaapp.R
 import com.example.socialmediaapp.model.Post

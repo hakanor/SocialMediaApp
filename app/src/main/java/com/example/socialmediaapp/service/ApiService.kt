@@ -1,4 +1,4 @@
-package com.example.myapplication.service
+package com.example.socialmediaapp.service
 
 import com.example.socialmediaapp.model.Post
 import com.google.gson.Gson
@@ -48,4 +48,3 @@ class ApiService {
         return jsonBody?.let { JSONObject(it).toString() }
     }
 }
-
