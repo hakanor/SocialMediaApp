@@ -172,7 +172,7 @@ class HomeActivity : AppCompatActivity(), AuthServiceCallback, NavigationView.On
         startActivity(intent)
     }
     private fun fetchPosts () {
-        val apiService = ApiService()
+        val apiService = ApiService(this)
         val url = Constants.URL_POSTS
         val method = "GET"
 

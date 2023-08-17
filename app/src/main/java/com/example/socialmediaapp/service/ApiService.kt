@@ -1,5 +1,6 @@
 package com.example.socialmediaapp.service
 
+import android.content.Context
 import com.example.socialmediaapp.model.Post
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -9,17 +10,24 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONObject
 import java.io.IOException
 
-class ApiService {
+class ApiService (private val context: Context? = null) {
     private val apiKey = "txSCMdHUWaajE22Z7uwFr4L5w15Hifyk8SOewyOR"
     private val client = OkHttpClient()
+    private var accessToken = ""
 
     fun sendHttpRequestWithApiKey(url: String, method: String, requestBody: String?, callback: (String?, Int?, Exception?) -> Unit) {
         val mediaType = "application/json; charset=utf-8".toMediaType()
         val body = requestBody?.toRequestBody(mediaType)
 
+        if (context != null ) {
+            val spService = SharedPreferencesService(context)
+            accessToken = spService.getCurrentAccessToken().toString()
+        }
+
         val request = Request.Builder()
             .url(url)
             .addHeader("x-api-key", apiKey)
+            .addHeader("Authorization", accessToken)
             .method(method, body)
             .build()
 
