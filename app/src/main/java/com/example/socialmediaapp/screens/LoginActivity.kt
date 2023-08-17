@@ -12,12 +12,16 @@ import com.example.socialmediaapp.R
 import com.example.socialmediaapp.service.AuthService
 import com.example.socialmediaapp.service.AuthServiceCallback
 import com.example.socialmediaapp.service.SharedPreferencesService
+import com.example.socialmediaapp.service.TokenService
+import com.example.socialmediaapp.service.TokenServiceCallback
 
 import com.google.android.material.textfield.TextInputEditText
 
-class LoginActivity : AppCompatActivity(), AuthServiceCallback {
+class LoginActivity : AppCompatActivity(), AuthServiceCallback, TokenServiceCallback {
 
     private lateinit var authService: AuthService
+    private lateinit var tokenService: TokenService
+    private lateinit var sharedPreferencesService : SharedPreferencesService
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
@@ -28,6 +32,8 @@ class LoginActivity : AppCompatActivity(), AuthServiceCallback {
         val forgotPasswordText = findViewById<TextView>(R.id.forgotPasswordText)
 
         authService = AuthService(this,this)
+        tokenService = TokenService(this,this)
+        sharedPreferencesService = SharedPreferencesService(this)
         checkUserLoggedIn()
 
         loginButton.setOnClickListener {
@@ -54,11 +60,12 @@ class LoginActivity : AppCompatActivity(), AuthServiceCallback {
     }
     private fun checkUserLoggedIn () {
         val sp = SharedPreferencesService(this)
-        Log.d("auth",sp.getCurrentAccessToken()?:"")
-        if (sp.getCurrentUser() != "" && sp.getCurrentAccessToken() != "") {
-            authService.validateAccessToken()
+        val currentAccessToken =  sp.getCurrentAccessToken()
+        val currentUsername =  sp.getCurrentUser()
+        if (currentUsername != null && currentAccessToken != null) {
+            tokenService.validateAccessToken(currentAccessToken)
         } else {
-            Log.d("LoginActivity", "User is not logged in.")
+            Log.d("debug", "User is not logged in.")
         }
     }
     private fun navigateToHomeActivity () {
@@ -83,21 +90,36 @@ class LoginActivity : AppCompatActivity(), AuthServiceCallback {
     override fun onRegister(message: String) {
         TODO("Not yet implemented")
     }
+    override fun onValidAccessToken(message: String) {
+        if (message.contains("true")) {
+            navigateToHomeActivity()
+        } else {
+            runOnUiThread {
+                Toast.makeText(this,"AccesToken expired, generating new accessToken.",Toast.LENGTH_SHORT).show()
+                sharedPreferencesService.userRemoveAccessToken()
+                var user = sharedPreferencesService.getCurrentUser()
+                tokenService.getUserSubId(user?:"")
+            }
+        }
+    }
 
+    override fun onRefreshAccesToken(message: String) {
+        sharedPreferencesService.updateAccessToken(message)
+        navigateToHomeActivity()
+    }
+
+    override fun onGetUser(message: String) {
+        val refreshToken = sharedPreferencesService.getCurrentRefreshToken()
+        if (refreshToken != null ){
+            tokenService.refreshAccessToken(message,refreshToken)
+        }
+    }
     override fun onError(error: String) {
         runOnUiThread{
             Toast.makeText(this,error,Toast.LENGTH_LONG).show()
         }
     }
     override fun onSuccess(message: String) {
-        if (message.contains("true")) {
-            navigateToHomeActivity()
-        } else {
-            runOnUiThread {
-                Toast.makeText(this,"AccesToken expired, please log in again.",Toast.LENGTH_SHORT).show()
-                val spService = SharedPreferencesService(this)
-                spService.userSignOut()
-            }
-        }
+
     }
 }

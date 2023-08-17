@@ -2,6 +2,8 @@ package com.example.socialmediaapp.service
 
 import android.content.Context
 import android.content.SharedPreferences
+import org.json.JSONException
+import org.json.JSONObject
 
 class SharedPreferencesService(context: Context) {
     private val sharedPrefs: SharedPreferences = context.getSharedPreferences("AWSLogin", Context.MODE_PRIVATE)
@@ -18,6 +20,9 @@ class SharedPreferencesService(context: Context) {
         sharedPrefs.edit().remove("username").apply()
     }
 
+    fun userRemoveAccessToken() {
+        sharedPrefs.edit().remove("accessToken").apply()
+    }
     fun getCurrentUser(): String? {
         var username = sharedPrefs.getString("username","")
         return username
@@ -25,7 +30,15 @@ class SharedPreferencesService(context: Context) {
 
     fun getCurrentAccessToken(): String? {
         var token  = sharedPrefs.getString("accessToken","")
-        return token
+        if (token.isNullOrBlank()) {
+            return null
+        }
+        try {
+            val jsonObject = JSONObject(token)
+            return jsonObject.optString("accessToken", null)
+        } catch (e: JSONException) {
+            return null
+        }
     }
     fun getCurrentRefreshToken(): String? {
         var token  = sharedPrefs.getString("refreshToken","")
@@ -33,6 +46,6 @@ class SharedPreferencesService(context: Context) {
     }
 
     fun updateAccessToken(accessToken: String) {
-        sharedPrefs.edit().remove("accessToken").apply()
+        sharedPrefs.edit().putString("accessToken",accessToken).apply()
     }
 }
