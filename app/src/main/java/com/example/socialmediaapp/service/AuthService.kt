@@ -11,12 +11,13 @@ enum class AuthServiceActions(val value:String) {
     ChangePassword("changePassword"),
     ResetPassword("resetPassword"),
     ConfirmForgotPassword("confirmForgotPassword"),
-    MFA("mfa"),
+    RespondToMfaChallenge("respondToMfaChallenge"),
     Logout("logout"),
 }
 
 interface AuthServiceCallback {
     fun onLogin(message: String)
+    fun onLoginChallenge(message:String)
     fun onLogOut(message: String)
     fun onRegister(message: String)
     fun onError(error: String)
@@ -32,6 +33,37 @@ class AuthService (private val appContext: Context, private var callback: AuthSe
             "action" to AuthServiceActions.Login.value, // Use enum value here
             "username" to username,
             "password" to password
+        )
+        val requestBody = apiService.createJsonStringFromMap(jsonBody)
+
+        apiService.sendHttpRequestWithApiKey(url, method, requestBody) { responseBody, responseCode, error ->
+            if (error != null) {
+                callback.onError(error.message.toString())
+            } else {
+                if (responseCode == 200) {
+                    val jsonResponse = JSONObject(responseBody ?: "")
+                    if (jsonResponse.has("challengeSession")) {
+                        val challengeSession = jsonResponse.getString("challengeSession")
+                        callback.onLoginChallenge(challengeSession)
+                    } else {
+                        callback.onError(responseBody.toString())
+                    }
+                } else {
+                    callback.onError(responseBody.toString())
+                }
+            }
+        }
+    }
+
+    fun respondToMfaChallenge(username:String, challengeSession: String, mfaCode: String) {
+        val apiService = ApiService()
+        val url = Constants.BASE_URL + "/auth"
+        val method = "POST"
+        val jsonBody = mapOf(
+            "action" to AuthServiceActions.RespondToMfaChallenge.value, // Use enum value here
+            "challengeSession" to challengeSession,
+            "mfaCode" to mfaCode,
+            "username" to username
         )
         val requestBody = apiService.createJsonStringFromMap(jsonBody)
 

@@ -9,6 +9,7 @@ import com.example.socialmediaapp.Constants
 import com.example.socialmediaapp.R
 import com.example.socialmediaapp.service.CognitoService
 import com.example.socialmediaapp.service.CognitoServiceCallback
+import com.example.socialmediaapp.service.SharedPreferencesService
 import com.google.android.material.textfield.TextInputEditText
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -30,8 +31,8 @@ class CreatePostActivity : AppCompatActivity(), CognitoServiceCallback{
 
         setCurrentDateAndTime()
 
-        var cognito = CognitoService(this,this)
-        this.userId = cognito.getCurrentUserId()
+        var spService = SharedPreferencesService(this)
+        this.userId = spService.getCurrentUser().toString()
 
         createPostButton.setOnClickListener {
             content = contentTextEdit.text.toString()

@@ -3,6 +3,7 @@ package com.example.socialmediaapp.screens
 import android.content.Intent
 import android.graphics.Canvas
 import android.os.Bundle
+import android.util.Log
 import android.view.KeyEvent
 import android.view.MenuItem
 import android.view.View
@@ -23,6 +24,7 @@ import com.example.socialmediaapp.RecyclerViewAdapter
 import com.example.socialmediaapp.model.Post
 import com.example.socialmediaapp.service.AuthService
 import com.example.socialmediaapp.service.AuthServiceCallback
+import com.example.socialmediaapp.service.SharedPreferencesService
 import com.google.android.material.navigation.NavigationView
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 
@@ -172,7 +174,9 @@ class HomeActivity : AppCompatActivity(), AuthServiceCallback, NavigationView.On
         startActivity(intent)
     }
     private fun fetchPosts () {
-        val apiService = ApiService(this)
+        val spService = SharedPreferencesService(this)
+        val accessToken = spService.getCurrentAccessToken()
+        val apiService = ApiService(accessToken)
         val url = Constants.URL_POSTS
         val method = "GET"
 
@@ -228,6 +232,10 @@ class HomeActivity : AppCompatActivity(), AuthServiceCallback, NavigationView.On
     }
 
     override fun onLogin(message: String) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onLoginChallenge(message: String) {
         TODO("Not yet implemented")
     }
 

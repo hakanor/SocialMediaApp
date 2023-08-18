@@ -38,6 +38,10 @@ class ForgotPasswordActivity : AppCompatActivity(), AuthServiceCallback {
         TODO("Not yet implemented")
     }
 
+    override fun onLoginChallenge(message: String) {
+        TODO("Not yet implemented")
+    }
+
     override fun onLogOut(message: String) {
         TODO("Not yet implemented")
     }

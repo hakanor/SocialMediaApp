@@ -2,6 +2,7 @@ package com.example.socialmediaapp.service
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.util.Log
 import org.json.JSONException
 import org.json.JSONObject
 
@@ -10,6 +11,7 @@ class SharedPreferencesService(context: Context) {
 
     fun userLoggedIn(accessToken:String, refreshToken:String, username:String) {
         sharedPrefs.edit().putString("accessToken",accessToken).apply()
+        Log.d("sp","GetCurrentAccessToken=\n"+accessToken)
         sharedPrefs.edit().putString("refreshToken",refreshToken).apply()
         sharedPrefs.edit().putString("username",username).apply()
     }
@@ -30,14 +32,13 @@ class SharedPreferencesService(context: Context) {
 
     fun getCurrentAccessToken(): String? {
         var token  = sharedPrefs.getString("accessToken","")
+        if (token != null) {
+            Log.d("sp","GetCurrentAccessToken=\n"+token)
+        }
         if (token.isNullOrBlank()) {
             return null
-        }
-        try {
-            val jsonObject = JSONObject(token)
-            return jsonObject.optString("accessToken", null)
-        } catch (e: JSONException) {
-            return null
+        } else {
+            return token
         }
     }
     fun getCurrentRefreshToken(): String? {
@@ -47,5 +48,6 @@ class SharedPreferencesService(context: Context) {
 
     fun updateAccessToken(accessToken: String) {
         sharedPrefs.edit().putString("accessToken",accessToken).apply()
+        Log.d("sp","updateAccessToken=\n"+ accessToken)
     }
 }

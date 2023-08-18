@@ -61,7 +61,12 @@ class TokenService (private val appContext: Context, private var callback: Token
             } else {
                 if (responseCode == 200) {
                     val jsonResponse = JSONObject(responseBody ?: "")
-                    callback.onRefreshAccesToken(jsonResponse.toString())
+                    if (jsonResponse.has("accessToken")) {
+                        val accessToken = jsonResponse.getString("accessToken")
+                        callback.onRefreshAccesToken(accessToken.toString())
+                    } else {
+                        callback.onError(responseBody.toString())
+                    }
                 } else {
                     callback.onError(responseBody.toString())
                 }
