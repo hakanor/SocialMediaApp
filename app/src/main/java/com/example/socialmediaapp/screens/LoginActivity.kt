@@ -7,7 +7,6 @@ import android.text.TextUtils
 import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -21,7 +20,6 @@ import com.example.socialmediaapp.service.SharedPreferencesService
 import com.example.socialmediaapp.service.TokenService
 import com.example.socialmediaapp.service.TokenServiceCallback
 import com.google.android.material.textfield.TextInputEditText
-
 
 class LoginActivity : AppCompatActivity(), AuthServiceCallback, TokenServiceCallback {
 
@@ -69,7 +67,7 @@ class LoginActivity : AppCompatActivity(), AuthServiceCallback, TokenServiceCall
         }
     }
 
-    fun showAlertDialog() {
+    private fun showAlertDialog() {
         val mDialogView = LayoutInflater.from(this).inflate(R.layout.custom_alert_layout, null)
         val mBuilder = AlertDialog.Builder(this).setView(mDialogView).show()
 
@@ -153,24 +151,20 @@ class LoginActivity : AppCompatActivity(), AuthServiceCallback, TokenServiceCall
             Toast.makeText(this,message,Toast.LENGTH_LONG).show()
         }
     }
-
-    override fun onRegister(message: String) {
-        TODO("Not yet implemented")
-    }
     override fun onValidAccessToken(message: String) {
         if (message.contains("true")) {
             navigateToHomeActivity()
         } else {
             runOnUiThread {
-                Toast.makeText(this,"AccesToken expired, generating new accessToken.",Toast.LENGTH_SHORT).show()
+                Toast.makeText(this,"AccessToken expired, generating new accessToken.",Toast.LENGTH_SHORT).show()
                 sharedPreferencesService.userRemoveAccessToken()
-                var user = sharedPreferencesService.getCurrentUser()
+                val user = sharedPreferencesService.getCurrentUser()
                 tokenService.getUserSubId(user?:"")
             }
         }
     }
 
-    override fun onRefreshAccesToken(message: String) {
+    override fun onRefreshAccessToken(message: String) {
         sharedPreferencesService.updateAccessToken(message)
         navigateToHomeActivity()
     }

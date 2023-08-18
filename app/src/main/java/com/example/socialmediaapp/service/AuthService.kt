@@ -16,18 +16,30 @@ enum class AuthServiceActions(val value:String) {
 }
 
 interface AuthServiceCallback {
-    fun onLogin(message: String)
-    fun onLoginChallenge(message:String)
-    fun onLogOut(message: String)
-    fun onRegister(message: String)
-    fun onError(error: String)
-    fun onSuccess(message:String)
+    fun onLogin(message: String) {
+        throw UnsupportedOperationException("onLogin must be overridden")
+    }
+    fun onLoginChallenge(message:String) {
+        throw UnsupportedOperationException("onLoginChallenge must be overridden")
+    }
+    fun onLogOut(message: String) {
+        throw UnsupportedOperationException("onLogOut must be overridden")
+    }
+    fun onRegister(message: String) {
+        throw UnsupportedOperationException("onRegister must be overridden")
+    }
+    fun onError(error: String) {
+        throw UnsupportedOperationException("onError must be overridden")
+    }
+    fun onSuccess(message:String) {
+        throw UnsupportedOperationException("onSuccess must be overridden")
+    }
 }
 
 class AuthService (private val appContext: Context, private var callback: AuthServiceCallback){
     fun login(username: String, password: String) {
         val apiService = ApiService()
-        val url = Constants.BASE_URL + "/auth"
+        val url = Constants.URL_AUTH
         val method = "POST"
         val jsonBody = mapOf(
             "action" to AuthServiceActions.Login.value, // Use enum value here

@@ -39,17 +39,6 @@ class RegisterActivity : AppCompatActivity(), AuthServiceCallback {
             }
         }
     }
-    override fun onLogin(message: String) {
-        TODO("Not yet implemented")
-    }
-
-    override fun onLoginChallenge(message: String) {
-        TODO("Not yet implemented")
-    }
-
-    override fun onLogOut(message: String) {
-        TODO("Not yet implemented")
-    }
 
     override fun onRegister(message: String) {
         runOnUiThread {
@@ -64,9 +53,5 @@ class RegisterActivity : AppCompatActivity(), AuthServiceCallback {
         runOnUiThread {
             Toast.makeText(this,error,Toast.LENGTH_SHORT).show()
         }
-    }
-
-    override fun onSuccess(message: String) {
-        TODO("Not yet implemented")
     }
 }

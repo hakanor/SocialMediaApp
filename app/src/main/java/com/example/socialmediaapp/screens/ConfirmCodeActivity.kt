@@ -26,12 +26,7 @@ class ConfirmCodeActivity : AppCompatActivity() {
         val editText6 = findViewById<EditText>(R.id.editText6)
 
         val editTexts = mutableListOf<EditText>(
-            findViewById(R.id.editText1),
-            findViewById(R.id.editText2),
-            findViewById(R.id.editText3),
-            findViewById(R.id.editText4),
-            findViewById(R.id.editText5),
-            findViewById(R.id.editText6)
+            editText1, editText2, editText3, editText4, editText5, editText6
         )
 
         for (i in 0 until editTexts.size - 1) {
@@ -67,6 +62,5 @@ class ConfirmCodeActivity : AppCompatActivity() {
                 startActivity(intent)
             }
         }
-
     }
 }

@@ -11,11 +11,21 @@ enum class TokenServiceActions(val value:String) {
 }
 
 interface TokenServiceCallback {
-    fun onValidAccessToken(message: String)
-    fun onRefreshAccesToken(message: String)
-    fun onGetUser(message: String)
-    fun onError(error: String)
-    fun onSuccess(message:String)
+    fun onValidAccessToken(message: String) {
+        throw UnsupportedOperationException("onValidAccessToken must be overridden")
+    }
+    fun onRefreshAccessToken(message: String) {
+        throw UnsupportedOperationException("onRefreshAccessToken must be overridden")
+    }
+    fun onGetUser(message: String) {
+        throw UnsupportedOperationException("onGetUser must be overridden")
+    }
+    fun onError(error: String) {
+        throw UnsupportedOperationException("onError must be overridden")
+    }
+    fun onSuccess(message:String) {
+        throw UnsupportedOperationException("onSuccess must be overridden")
+    }
 }
 
 class TokenService (private val appContext: Context, private var callback: TokenServiceCallback){
@@ -63,7 +73,7 @@ class TokenService (private val appContext: Context, private var callback: Token
                     val jsonResponse = JSONObject(responseBody ?: "")
                     if (jsonResponse.has("accessToken")) {
                         val accessToken = jsonResponse.getString("accessToken")
-                        callback.onRefreshAccesToken(accessToken.toString())
+                        callback.onRefreshAccessToken(accessToken.toString())
                     } else {
                         callback.onError(responseBody.toString())
                     }
@@ -76,7 +86,7 @@ class TokenService (private val appContext: Context, private var callback: Token
 
     fun getUserSubId(username:String) {
         val apiService = ApiService()
-        val url = Constants.BASE_URL + "/auth"
+        val url = Constants.URL_AUTH
         val method = "POST"
         val jsonBody = mapOf(
             "action" to TokenServiceActions.GetUser.value,

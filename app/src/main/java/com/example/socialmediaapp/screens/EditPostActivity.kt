@@ -42,9 +42,9 @@ class EditPostActivity : AppCompatActivity() {
         }
 
         editPostButton.setOnClickListener {
-            var userId = userIdInputEditText.text
-            var content = contentEditText.text
-            var date = dateInputEditText.text
+            val userId = userIdInputEditText.text
+            val content = contentEditText.text
+            val date = dateInputEditText.text
 
             val requestBody = "{\"id\":\"$id\",\"userId\":\"$userId\", \"content\": \"$content\", \"date\": \"$date\"}"
             val apiService = ApiService()

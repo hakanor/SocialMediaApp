@@ -25,15 +25,21 @@ import com.example.socialmediaapp.model.Post
 import com.example.socialmediaapp.service.AuthService
 import com.example.socialmediaapp.service.AuthServiceCallback
 import com.example.socialmediaapp.service.SharedPreferencesService
+import com.example.socialmediaapp.service.TokenService
+import com.example.socialmediaapp.service.TokenServiceCallback
 import com.google.android.material.navigation.NavigationView
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 
-class HomeActivity : AppCompatActivity(), AuthServiceCallback, NavigationView.OnNavigationItemSelectedListener{
+class HomeActivity : AppCompatActivity(), AuthServiceCallback, NavigationView.OnNavigationItemSelectedListener, TokenServiceCallback{
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: RecyclerViewAdapter
     private lateinit var loadingProgressBar: ProgressBar
     private lateinit var postList: List<Post>
+    private lateinit var tokenService : TokenService
+    private lateinit var authService : AuthService
+    private lateinit var spService : SharedPreferencesService
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
@@ -42,6 +48,10 @@ class HomeActivity : AppCompatActivity(), AuthServiceCallback, NavigationView.On
         navView.setNavigationItemSelectedListener(this)
 
         val createPostButton = findViewById<Button>(R.id.newPostButton)
+
+        authService = AuthService(this,this)
+        tokenService = TokenService(this,this)
+        spService = SharedPreferencesService(this)
 
         loadingProgressBar = findViewById(R.id.loadingProgressBar)
         loadingProgressBar.visibility = View.VISIBLE
@@ -222,21 +232,14 @@ class HomeActivity : AppCompatActivity(), AuthServiceCallback, NavigationView.On
             }
 
             R.id.nav_logout -> {
-                val authService = AuthService(this,this)
-                authService.logOut()
+                val token = spService.getCurrentAccessToken()
+                if (token != null) {
+                    tokenService.validateAccessToken(token)
+                }
                 return true
             }
-            // Handle other items as needed
         }
         return false
-    }
-
-    override fun onLogin(message: String) {
-        TODO("Not yet implemented")
-    }
-
-    override fun onLoginChallenge(message: String) {
-        TODO("Not yet implemented")
     }
 
     override fun onLogOut(message: String) {
@@ -244,10 +247,6 @@ class HomeActivity : AppCompatActivity(), AuthServiceCallback, NavigationView.On
             Toast.makeText(this,message,Toast.LENGTH_SHORT).show()
         }
         navigateToLoginActivity()
-    }
-
-    override fun onRegister(message: String) {
-        TODO("Not yet implemented")
     }
 
     override fun onError(error: String) {
@@ -258,5 +257,29 @@ class HomeActivity : AppCompatActivity(), AuthServiceCallback, NavigationView.On
 
     override fun onSuccess(message: String) {
         TODO("Not yet implemented")
+    }
+
+    override fun onValidAccessToken(message: String) {
+        if (message.contains("true")) {
+            authService.logOut()
+        } else {
+            runOnUiThread {
+                spService.userRemoveAccessToken()
+                val user = spService.getCurrentUser()
+                tokenService.getUserSubId(user?:"")
+            }
+        }
+    }
+
+    override fun onRefreshAccessToken(message: String) {
+        spService.updateAccessToken(message)
+        authService.logOut()
+    }
+
+    override fun onGetUser(message: String) {
+        val refreshToken = spService.getCurrentRefreshToken()
+        if (refreshToken != null ){
+            tokenService.refreshAccessToken(message,refreshToken)
+        }
     }
 }

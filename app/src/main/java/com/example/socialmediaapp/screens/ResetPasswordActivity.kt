@@ -37,20 +37,6 @@ class ResetPasswordActivity : AppCompatActivity(), AuthServiceCallback {
             }
         }
     }
-    override fun onLogin(message: String) {
-        TODO("Not yet implemented")
-    }
-
-    override fun onLoginChallenge(message: String) {
-        TODO("Not yet implemented")
-    }
-
-    override fun onLogOut(message: String) {
-        TODO("Not yet implemented")
-    }
-    override fun onRegister(message: String) {
-        TODO("Not yet implemented")
-    }
     override fun onError(error: String) {
         runOnUiThread {
             Toast.makeText(this,error, Toast.LENGTH_SHORT).show()

@@ -7,14 +7,12 @@ import android.widget.Toast
 import com.example.socialmediaapp.service.ApiService
 import com.example.socialmediaapp.Constants
 import com.example.socialmediaapp.R
-import com.example.socialmediaapp.service.CognitoService
-import com.example.socialmediaapp.service.CognitoServiceCallback
 import com.example.socialmediaapp.service.SharedPreferencesService
 import com.google.android.material.textfield.TextInputEditText
 import java.text.SimpleDateFormat
 import java.util.Date
 
-class CreatePostActivity : AppCompatActivity(), CognitoServiceCallback{
+class CreatePostActivity : AppCompatActivity(){
 
     private lateinit var dateTextEdit : TextInputEditText
     private lateinit var contentTextEdit : TextInputEditText
@@ -27,11 +25,11 @@ class CreatePostActivity : AppCompatActivity(), CognitoServiceCallback{
         setContentView(R.layout.activity_create_post)
         dateTextEdit = findViewById(R.id.dateTextEdit)
         contentTextEdit = findViewById(R.id.contentTextEdit)
-        var createPostButton = findViewById<Button>(R.id.createPostButton)
+        val createPostButton = findViewById<Button>(R.id.createPostButton)
 
         setCurrentDateAndTime()
 
-        var spService = SharedPreferencesService(this)
+        val spService = SharedPreferencesService(this)
         this.userId = spService.getCurrentUser().toString()
 
         createPostButton.setOnClickListener {
@@ -65,17 +63,5 @@ class CreatePostActivity : AppCompatActivity(), CognitoServiceCallback{
         val currentDate = sdf.format(Date())
         date = currentDate
         dateTextEdit.setText(currentDate)
-    }
-
-    override fun onLoginSuccess() {
-        TODO("Not yet implemented")
-    }
-
-    override fun onSignOut() {
-        TODO("Not yet implemented")
-    }
-
-    override fun onRegisterSuccess() {
-        TODO("Not yet implemented")
     }
 }
