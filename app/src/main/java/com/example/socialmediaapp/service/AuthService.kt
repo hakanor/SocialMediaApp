@@ -116,14 +116,15 @@ class AuthService (private val appContext: Context, private var callback: AuthSe
             }
         }
     }
-    fun registerUser(username: String, password: String,name: String, surname: String) {
+    fun registerUser(username: String, password: String,nameSurname: String, phoneNumber: String) {
         val apiService = ApiService()
         val url = Constants.BASE_URL + "/auth"
         val method = "POST"
         val jsonBody = mapOf(
             "action" to AuthServiceActions.Register.value, // Use enum value here
             "username" to username,
-            "password" to password
+            "password" to password,
+            "phoneNumber" to phoneNumber
         )
         val requestBody = apiService.createJsonStringFromMap(jsonBody)
 
@@ -134,7 +135,7 @@ class AuthService (private val appContext: Context, private var callback: AuthSe
                 if (responseCode == 200) {
                     val jsonResponse = JSONObject(responseBody ?: "")
                     val dbService = UserDBService()
-                    dbService.createNewUser(name,surname)
+                    dbService.createNewUser(username,nameSurname,phoneNumber)
                     callback.onRegister(jsonResponse.toString())
                 } else {
                     callback.onError(responseBody.toString())

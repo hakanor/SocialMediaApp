@@ -16,8 +16,8 @@ class RegisterActivity : AppCompatActivity(), AuthServiceCallback {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
         val emailEditText = findViewById<TextInputEditText>(R.id.emailEditText)
-        val nameEditText = findViewById<TextInputEditText>(R.id.nameEditText)
-        val surnameEditText = findViewById<TextInputEditText>(R.id.surnameEditText)
+        val nameSurnameEditText = findViewById<TextInputEditText>(R.id.nameSurnameEditText)
+        val phoneNumberEditText = findViewById<TextInputEditText>(R.id.phoneNumberEditText)
         val passwordEditText = findViewById<TextInputEditText>(R.id.passwordEditText)
         val signUpButton = findViewById<Button>(R.id.signUpButton)
 
@@ -26,16 +26,16 @@ class RegisterActivity : AppCompatActivity(), AuthServiceCallback {
 
             val username = emailEditText.text.toString()
             val password = passwordEditText.text.toString()
-            val name = nameEditText.text.toString()
-            val surname = surnameEditText.text.toString()
+            val nameSurname = nameSurnameEditText.text.toString()
+            val phoneNumber = phoneNumberEditText.text.toString()
 
             if(TextUtils.isEmpty(emailEditText.text)
                 || TextUtils.isEmpty(passwordEditText.text)
-                || TextUtils.isEmpty(nameEditText.text)
-                || TextUtils.isEmpty(surnameEditText.text)){
+                || TextUtils.isEmpty(nameSurnameEditText.text)
+                || TextUtils.isEmpty(phoneNumberEditText.text)){
                 Toast.makeText(this@RegisterActivity,"Please fill out all fields.", Toast.LENGTH_SHORT).show()
             }  else {
-                authService.registerUser(username,password,name,surname)
+                authService.registerUser(username,password,nameSurname,phoneNumber)
             }
         }
     }
